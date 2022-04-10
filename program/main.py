@@ -1,8 +1,8 @@
-from email import message
+from tg_token import tg_token
 import telebot
 import psycopg2
 
-bot = telebot.TeleBot("1820483359:AAHjQnauQ3mGC7BIEeGDYinSyTAyNu1Bm6o",parse_mode = None)
+bot = telebot.TeleBot(tg_token,parse_mode = None)
 
 
 @bot.message_handler(commands=['start'])
