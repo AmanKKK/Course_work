@@ -2,6 +2,7 @@ from tg_token import tg_token
 import telebot
 import database_connection
 from database_connection import cursor
+from database_connection import conn
 
 #cursor.execute('SELECT years FROM aman ' + 
 #                'WHERE id = 1')
@@ -22,7 +23,12 @@ def reply_to_user(message):
 	"/give_up_habbit is the command to give up a bad habit, that you have, and you want to stop do it\n"
 	"/help is the command to see more commands that I have, and see how exactly to use /set_habit and /give_up_habit commands"
 	)
-
+	isNotConnectedToBot = True
+	
+	user_id = str(message.from_user.id)
+	cursor.execute('INSERT INTO tg_users_data(user_name,tg_user_id) ' + 
+	              'VALUES(' + '\'' + message.from_user.first_name + '\'' + ',' + user_id +');')
+	conn.commit()
 
 
 @bot.message_handler(commands=['view'])
