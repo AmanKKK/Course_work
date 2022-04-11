@@ -1,8 +1,16 @@
 from tg_token import tg_token
 import telebot
-import psycopg2
+import database_connection
+from database_connection import cursor
+
+#cursor.execute('SELECT years FROM aman ' + 
+#                'WHERE id = 1')
+#for row in cursor:
+#    print(row)
 
 bot = telebot.TeleBot(tg_token,parse_mode = None)
+
+
 
 
 @bot.message_handler(commands=['start'])
