@@ -80,7 +80,7 @@ def give_up_habit_reply(message):
 		data_to_insert['period_time'] = message_parse[2]
 		data_to_insert['notif_time'] = message_parse[3]
 		habit_id = message.from_user.id + 1
-		str_habit_id = str(habit_id)
+		str_habit_id = str(habit_id)         # Разобраться с тем как определять уникальное в рамках пользователя id
 		cursor.execute(
 		        'INSERT INTO habits_list(tg_user_id,habit_name,tg_habit_type,period_time,notif_time,habit_id)' +
 				' VALUES('  + user_id + 
@@ -94,12 +94,13 @@ def give_up_habit_reply(message):
 		conn.commit()
 @bot.message_handler(commands=['habit_list'])
 def view_habit_list(message):
-	cursor.execute("SELECT habit_id,habit_name FROM habits_list WHERE tg_user_id = 773333")
+	user_id = str(message.from_user.id)
+	cursor.execute("SELECT habit_id,habit_name,tg_habit_type FROM habits_list WHERE tg_user_id  =" + user_id)
 	result = cursor.fetchall()
 	send_habits_list  = " "
 	for row in result:
 		temp  = str(row[0])
-		send_habits_list = send_habits_list + 'id: ' + temp + '   ' +'habit_name: ' + row[1] + '\n' + '-------------------------------------' + '\n'
+		send_habits_list = send_habits_list + 'id: ' + temp + '   ' +'habit_name: ' + row[1] + '   ' + 'type: ' + row[2] +  '\n' + '-------------------------------------' + '\n'
 
 	bot.send_message(message.chat.id,send_habits_list)
 
