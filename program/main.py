@@ -64,7 +64,7 @@ def set_habit_reply(message):
 @bot.message_handler(commands=['give_up_habit'])
 def give_up_habit_reply(message):
 	bot.send_message(message.chat.id,
-	"Set a habit,that you want to give up!")
+	"Set a habit, that you want to give up!")
 	@bot.message_handler(regexp="NEG")
 	def give_up_habit(message):
 		user_id = str(message.from_user.id)
@@ -92,6 +92,17 @@ def give_up_habit_reply(message):
 			    ');'
 		)
 		conn.commit()
+@bot.message_handler(commands=['habit_list'])
+def view_habit_list(message):
+	cursor.execute("SELECT habit_id,habit_name FROM habits_list WHERE tg_user_id = 773333")
+	result = cursor.fetchall()
+	send_habits_list  = " "
+	for row in result:
+		temp  = str(row[0])
+		send_habits_list = send_habits_list + 'id: ' + temp + '   ' +'habit_name: ' + row[1] + '\n' + '-------------------------------------' + '\n'
+
+	bot.send_message(message.chat.id,send_habits_list)
+
 
 	
 	
