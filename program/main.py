@@ -104,6 +104,26 @@ def view_habit_list(message):
 
 	bot.send_message(message.chat.id,send_habits_list)
 
+@bot.message_handler(commands=['edit_habit'])
+def edit_habit_view_info(message):
+	bot.send_message(message.chat.id,
+	"/rename_habit is command to change habit's name\n"+
+	"/change_peroid is command to change habit's period\n" +
+	"/change_notif_time is command to change habit's notification_time\n")
+
+@bot.message_handler(commands=['rename_habit'])
+def rename_habit_reply(message):
+	bot.send_message(message.chat.id,
+	"set a new name to one of your habits\n" +
+	"Remember to send the command text in a strictly defined format")
+	@bot.message_handler(regexp="RENAME")
+	def rename_habit_query(message):
+		user_id = str(message.from_user.id)
+		get_new_name = message.text.split()
+		query = "UPDATE habits_list SET habit_name = " + '\'' +get_new_name[3] + '\'' +" WHERE tg_user_id =" + user_id + " AND " + "habit_id=" + get_new_name[1]
+		cursor.execute(query)
+		conn.commit()
+
 
 	
 	
