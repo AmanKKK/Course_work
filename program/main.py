@@ -44,13 +44,19 @@ def set_habit_reply(message):
 			'notif_time': NULL
 		}
 		print(message.text + '\n')
+		set_habit_id = 0
 		message_parse = message.text.split()
 		data_to_insert['habit_name'] = message_parse[0]
 		data_to_insert['tg_habit_type'] = message_parse[1]
 		data_to_insert['period_time'] = message_parse[2]
 		data_to_insert['notif_time'] = message_parse[3]
-		habit_id = message.from_user.id + 1
-		str_habit_id = str(habit_id)
+		cursor.execute("SELECT MAX(habit_id) FROM habits_list WHERE tg_user_id = " + user_id)
+		get_habit_id = cursor.fetchall()
+		if(get_habit_id[0][0] != None):
+			set_habit_id = get_habit_id[0][0] + 1
+		else:
+			set_habit_id+=1
+		str_set_habit_id = str(set_habit_id)
 		cursor.execute(
 		        'INSERT INTO habits_list(tg_user_id,habit_name,tg_habit_type,period_time,notif_time,habit_id)' +
 				' VALUES('  + user_id + 
@@ -58,7 +64,7 @@ def set_habit_reply(message):
 				',' + '\'' + data_to_insert['tg_habit_type'] + '\'' + 
 			    ',' + data_to_insert['period_time'] + 
 			    ',' + '\'' + data_to_insert['notif_time'] + '\'' + 
-				',' + str_habit_id +
+				',' + str_set_habit_id +
 			    ');'
 		)
 		conn.commit()
