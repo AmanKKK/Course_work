@@ -1,4 +1,5 @@
 from asyncio.windows_events import NULL
+from itertools import combinations
 from pickle import TRUE
 from tg_token import tg_token
 import telebot
@@ -9,7 +10,7 @@ import re
 
 
 bot = telebot.TeleBot(tg_token,parse_mode = None)
-
+# Потенциально у пользователя есть возможность удалить привычку другого пользователя. ИСПРАВИТЬ
 
 
 
@@ -120,9 +121,47 @@ def rename_habit_reply(message):
 	def rename_habit_query(message):
 		user_id = str(message.from_user.id)
 		get_new_name = message.text.split()
-		query = "UPDATE habits_list SET habit_name = " + '\'' +get_new_name[3] + '\'' +" WHERE tg_user_id =" + user_id + " AND " + "habit_id=" + get_new_name[1]
+		query = "UPDATE habits_list SET habit_name = " + '\'' +get_new_name[3] + '\'	' +" WHERE tg_user_id =" + user_id + " AND " + "habit_id=" + get_new_name[1]
 		cursor.execute(query)
 		conn.commit()
+
+@bot.message_handler(commands=['ch_notif_time'])
+def change_notif_time_reply(message):
+	bot.send_message(message.chat.id,
+	"Set new_notif_time")
+	@bot.message_handler(regexp="CH_NOTIF")
+	def change_notif_time(message):
+		user_id = str(message.from_user.id)
+		get_new_time = message.text.split()
+		query = 'UPDATE habits_list SET notif_time = ' + '\'' + get_new_time[2] + '\'' + " WHERE tg_user_id =" + user_id + " AND " + "habit_id = " + get_new_time[1]
+		cursor.execute(query)
+		conn.commit()
+
+@bot.message_handler(commands=['ch_period'])
+def change_period_reply(message):
+	bot.send_message(message.chat.id,
+	"Set new period")
+	@bot.message_handler(regexp="CH_PERIOD")
+	def change_period(message):
+		user_id = str(message.from_user.id)
+		get_new_period = message.text.split()
+		cursor.execute('UPDATE habits_list SET period_time = ' + '\'' + get_new_period[2] + '\'' + " WHERE tg_user_id =" + user_id + " AND " + "habit_id = " + get_new_period[1])
+		conn.commit()
+	
+@bot.message_handler(commands=['delete_habit'])
+def delete_habit_reply(message):
+	bot.send_message(message.chat.id,
+	"Delete habit")
+	@bot.message_handler(regexp="DELETE")
+	def delete_habit(message):
+		user_id = str(message.from_user.id)
+		get_habit_id = message.text.split()
+		query = "DELETE FROM habits_list WHERE habit_id=" + get_habit_id[1] + " AND " + "tg_user_id =" + user_id
+		cursor.execute(query)
+		conn.commit()
+
+		
+
 
 
 	
