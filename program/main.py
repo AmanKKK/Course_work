@@ -160,12 +160,18 @@ def delete_habit_reply(message):
 		cursor.execute(query)
 		conn.commit()
 
-		
 
-
-
-	
-	
+@bot.message_handler(commands=['reset'])
+def reset_reply(message):
+	bot.send_message(message.chat.id,
+	"reset a counter")
+	@bot.message_handler(regexp="RESET")
+	def reset(message):
+		user_id = str(message.from_user.id)
+		get_habit_id = message.text.split()
+		query = "UPDATE habits_list SET day_conter = 0 WHERE tg_user_id = " + user_id + " AND " + "habit_id = " + get_habit_id[1] + " AND " + "tg_habit_type = " + '\'' + "POS" + '\''
+		cursor.execute(query)
+		conn.commit()	
 
 
 
