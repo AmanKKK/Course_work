@@ -10,7 +10,7 @@ import re
 
 
 bot = telebot.TeleBot(tg_token,parse_mode = None)
-# Потенциально у пользователя есть возможность удалить привычку другого пользователя. ИСПРАВИТЬ
+
 
 
 
@@ -31,7 +31,10 @@ def reply_to_user(message):
 @bot.message_handler(commands=['set_habit'])
 def set_habit_reply(message):
 	bot.send_message(message.chat.id,
-	"Set new habit\n"
+	"To set a new habit, enter command strictly in the followig manner\n" +
+	"Enter in message field: habit_name habit_type(POS or NEG) period_time + notification_time\n" +
+	"If habit name consists of several names, use underscore(_) between words\n" +
+	"For habit_type use only words POS(positive habit) or NEG(negative habit)\n"
 	)
 	@bot.message_handler(regexp="POS")
 	def insert_habit(message):
@@ -71,7 +74,10 @@ def set_habit_reply(message):
 @bot.message_handler(commands=['give_up_habit'])
 def give_up_habit_reply(message):
 	bot.send_message(message.chat.id,
-	"Set a habit, that you want to give up!")
+	"To set a new habit, enter command strictly in the followig manner\n" +
+	"Enter in message field: habit_name habit_type(POS or NEG) period_time + notification_time\n" +
+	"If habit name consists of several names, use underscore(_) between words\n" +
+	"For habit_type use only words POS(positive habit) or NEG(negative habit)\n")
 	@bot.message_handler(regexp="NEG")
 	def give_up_habit(message):
 		user_id = str(message.from_user.id)
@@ -116,13 +122,16 @@ def edit_habit_view_info(message):
 	bot.send_message(message.chat.id,
 	"/rename_habit is command to change habit's name\n"+
 	"/change_peroid is command to change habit's period\n" +
-	"/change_notif_time is command to change habit's notification_time\n")
+	"/change_notification_time is command to change habit's notification_time\n")
 
 @bot.message_handler(commands=['rename_habit'])
 def rename_habit_reply(message):
 	bot.send_message(message.chat.id,
-	"set a new name to one of your habits\n" +
-	"Remember to send the command text in a strictly defined format")
+	"To set a new name to your habit\n" +
+	"enter command strictly in the followig manner:\n" +
+	"RENAME(command) habit_id(enter a habit_id) TO new_habit_name\n"+
+	"Remember to send the command text in a strictly defined format\n"+
+	"habit_id you can find by typing /habit_list")
 	@bot.message_handler(regexp="RENAME")
 	def rename_habit_query(message):
 		user_id = str(message.from_user.id)
@@ -131,11 +140,14 @@ def rename_habit_reply(message):
 		cursor.execute(query)
 		conn.commit()
 
-@bot.message_handler(commands=['ch_notif_time'])
+@bot.message_handler(commands=['upd_notif_time'])
 def change_notif_time_reply(message):
 	bot.send_message(message.chat.id,
-	"Set new_notif_time")
-	@bot.message_handler(regexp="CH_NOTIF")
+	"To set a new notification_time to your habit\n" +
+	"enter command strictly in the followig manner:\n" +
+	"UPD_NOTIF(command) habit_id(enter a habit_id) new_notification_time\n"+
+	"habit_id you can find in habit_list(type /habit_list)\n")
+	@bot.message_handler(regexp="UPD_NOTIF")
 	def change_notif_time(message):
 		user_id = str(message.from_user.id)
 		get_new_time = message.text.split()
@@ -143,11 +155,14 @@ def change_notif_time_reply(message):
 		cursor.execute(query)
 		conn.commit()
 
-@bot.message_handler(commands=['ch_period'])
+@bot.message_handler(commands=['upd_period'])
 def change_period_reply(message):
 	bot.send_message(message.chat.id,
-	"Set new period")
-	@bot.message_handler(regexp="CH_PERIOD")
+	"To set a new period to your habit\n" +
+	"enter command strictly in the followig manner:\n" +
+	"UPD_PERIOD(command) habit_id(enter a habit_id) new_period\n"+
+	"habit_id you can find in habit_list(type /habit_list)\n")
+	@bot.message_handler(regexp="UPD_PERIOD")
 	def change_period(message):
 		user_id = str(message.from_user.id)
 		get_new_period = message.text.split()
@@ -157,7 +172,10 @@ def change_period_reply(message):
 @bot.message_handler(commands=['delete_habit'])
 def delete_habit_reply(message):
 	bot.send_message(message.chat.id,
-	"Delete habit")
+	"To delete a habit\n" +
+	"enter command strictly in the followig manner:\n" +
+	"DELETE(command) habit_id(enter a habit_id)\n"+
+	"habit_id you can find in habit_list(type /habit_list\n")
 	@bot.message_handler(regexp="DELETE")
 	def delete_habit(message):
 		user_id = str(message.from_user.id)
@@ -170,7 +188,10 @@ def delete_habit_reply(message):
 @bot.message_handler(commands=['reset'])
 def reset_reply(message):
 	bot.send_message(message.chat.id,
-	"reset a counter")
+	"To reset a bad_habit's counter\n" +
+	"enter command strictly in the followig manner:\n" +
+	"RESET(command) habit_id(enter a habit_id"+
+	"habit_id you can find in habit_list(type /habit_list\n")
 	@bot.message_handler(regexp="RESET")
 	def reset(message):
 		user_id = str(message.from_user.id)
